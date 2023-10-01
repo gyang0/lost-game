@@ -1,2 +1,2 @@
-# lost-game
-JavaScript game
+# Lost: The Game
+JavaScript game in development
