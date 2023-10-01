@@ -13,23 +13,27 @@ let WIDTH = canvas.width;
 let HEIGHT = canvas.height;
 
 const titlePixMap = [
-	"11110110111000111111",
-	"11111111111101110110",
-	"11011111111110111111",
-	"01001011111111111111",
+	"12222222211100022222",
+	"10022222221102210122",
+	"11022221111220111111",
+	"01001012221111111111",
 	"10011111111111100111",
-	"01110111101111111110",
-	"11111101111110111110",
-	"11100101111010111111",
-	"11011100011101011110",
-	"11111001101110101111",
-	"01110111101111111110",
+	"01111111101111111110",
+	"11111101111110111010",
+	"11101011111010111111",
+	"10011111012221011110",
+	"11101100101110222211"
 ];
 
 
 var imgURLs = [
 	{ name: "stone", url: "images/stone.png" },
-	{ name: "mossy", url: "images/mossy.png" }
+	{ name: "mossy", url: "images/mossy.png" },
+	{ name: "dirt", url: "images/dirt.png" },
+	{ name: "lava1", url: "images/lava1.png" },
+	{ name: "lava2", url: "images/lava2.png" },
+
+	{ name: "lava_top", url: "images/lava_top.png" }
 ];
 var images = {};
 
@@ -89,13 +93,37 @@ function game(){
 
 	for(let i = 0; i < titlePixMap.length; i++){
 		for(let j = 0; j < titlePixMap[i].length; j++){
-			if(titlePixMap[i][j] == '0')
+			switch(titlePixMap[i][j]){
+			case '0':
 				ctx.drawImage(images.mossy, j*size, i*size, size, size);
-			else if (titlePixMap[i][j] == '1')
+				break;
+			case '1':
 				ctx.drawImage(images.stone, j*size, i*size, size, size);
+				break;
+			case '2':
+				ctx.drawImage(images.dirt, j*size, i*size, size, size);
+				break;
+			case '3':
+				// For lava, we randomly choose between 2 images for less noticeable patterns.
+				if(Math.random() >= 0.5)
+					ctx.drawImage(images.lava1, j*size, i*size, size, size);
+				else
+					ctx.drawImage(images.lava2, j*size, i*size, size, size);
+
+				break;
+			case '4':
+				ctx.drawImage(images.lava_top, j*size, i*size, size, size);
+				break;
+			}
 		}
 	}
 
+	ctx.closePath();
+
+	// Scene
+	ctx.beginPath();
+		ctx.fillStyle = "black";
+		ctx.fillRect(WIDTH/2 - 412, HEIGHT/2 - 250, 800, 450);
 	ctx.closePath();
 
 	// Title
@@ -124,6 +152,7 @@ function game(){
 	ctx.closePath();
 }
 
+// Run
 new Promise(function(resolve, reject){
 	console.log("Loading images...");
 	loadImgs(resolve);
