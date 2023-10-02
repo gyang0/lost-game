@@ -108,8 +108,8 @@ const primaryDecor = [
 	"-----|-------)------",
 	"--------------------",
 	"--------------------",
-	"-----,-------.------",
-	"------.,,..,,-------",
+	"-----/-------.------",
+	"------./,..,/-------",
 	"--------------------",
 	"--------------------"
 ];
@@ -130,6 +130,17 @@ const secondaryDecor = [
 function game(){
 	// Scene	
 	ctx.drawImage(images.titleScreenImg, WIDTH/2 - 420, HEIGHT/2 - 280, 889, 500);
+
+	// Image gradient for depth
+	const imgGrad = ctx.createRadialGradient(WIDTH/2, HEIGHT/2, 100, WIDTH/2, HEIGHT/2, 350);
+	imgGrad.addColorStop(0, "rgb(0, 0, 0, 0)");
+	imgGrad.addColorStop(1, "rgb(0, 0, 0)");
+
+	ctx.beginPath();
+		ctx.fillStyle = imgGrad;
+		ctx.fillRect(0, 0, WIDTH, HEIGHT);
+	ctx.closePath();
+
 
 	// Pixel art cover
 	ctx.beginPath();
@@ -200,32 +211,6 @@ function game(){
 	ctx.closePath();
 
 
-	// Title
-	ctx.beginPath();
-		ctx.font = "150px Young Serif";
-		ctx.lineWidth = 5;
-		ctx.strokeStyle = "white";
-		ctx.textAlign = "center";
-
-		ctx.strokeText("L O S T", WIDTH/2, HEIGHT/3.5);
-
-		ctx.fillStyle = "0x000000";
-		ctx.fillText("L O S T", WIDTH/2, HEIGHT/3.5);
-	ctx.closePath();
-
-	// "Click to Play"
-	ctx.beginPath();
-		ctx.font = "40px Suez One";
-
-		ctx.fillStyle = "white";
-		ctx.lineWidth = 1;
-		ctx.strokeText("Click to Play".split("").join(String.fromCharCode(8202)), WIDTH/2, HEIGHT/2.5);
-
-		ctx.fillStyle = "black";
-		ctx.fillText("Click to Play".split("").join(String.fromCharCode(8202)), WIDTH/2, HEIGHT/2.5);
-	ctx.closePath();
-
-
 	// Light effect (radial gradient)
 	// Took a stupidly long time to figure out.
 	const grad = ctx.createRadialGradient(WIDTH/2, HEIGHT/2, 100, WIDTH/2, HEIGHT/2, 700);
@@ -235,6 +220,32 @@ function game(){
 	ctx.beginPath();
 		ctx.fillStyle = grad;
 		ctx.fillRect(0, 0, WIDTH, HEIGHT);
+	ctx.closePath();
+
+
+	// Title
+	ctx.beginPath();
+		ctx.font = "150px Young Serif";
+		ctx.lineWidth = 5;
+		ctx.strokeStyle = "rgb(255, 255, 0, 0.5)";
+		ctx.textAlign = "center";
+
+		ctx.strokeText("L O S T", WIDTH/2, HEIGHT/3.5);
+
+		ctx.fillStyle = "rgb(0, 0, 0, 0.2)";
+		ctx.fillText("L O S T", WIDTH/2, HEIGHT/3.5);
+	ctx.closePath();
+
+	// "Click to Play"
+	ctx.beginPath();
+		ctx.font = "40px Suez One";
+
+		ctx.strokeStyle = "rgb(255, 255, 0, 0.5)";
+		ctx.lineWidth = 1;
+		ctx.strokeText("Click to Play".split("").join(String.fromCharCode(8202)), WIDTH/2, HEIGHT/2.5);
+
+		ctx.fillStyle = "rgb(0, 0, 0, 0.2)";
+		ctx.fillText("Click to Play".split("").join(String.fromCharCode(8202)), WIDTH/2, HEIGHT/2.5);
 	ctx.closePath();
 }
 
