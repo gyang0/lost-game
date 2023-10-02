@@ -9,21 +9,9 @@ canvas.oncontextmenu = function(e){
 canvas.width = window.screen.width;
 canvas.height = window.screen.height;
 
+
 let WIDTH = canvas.width;
 let HEIGHT = canvas.height;
-
-const titlePixMap = [
-	"12222222211100022222",
-	"10022222221102210122",
-	"11022221111220111111",
-	"01001012221111111111",
-	"10011111111111100111",
-	"01111111101111111110",
-	"11111101111110111010",
-	"11101011111010111111",
-	"10011111012221011110",
-	"11101100101110222211"
-];
 
 
 var imgURLs = [
@@ -32,8 +20,21 @@ var imgURLs = [
 	{ name: "dirt", url: "images/dirt.png" },
 	{ name: "lava1", url: "images/lava1.png" },
 	{ name: "lava2", url: "images/lava2.png" },
+	{ name: "lava_top", url: "images/lava_top.png" },
 
-	{ name: "lava_top", url: "images/lava_top.png" }
+	{ name: "stalactite_1", url: "images/stalactite_1.png" },
+	{ name: "stalactite_2", url: "images/stalactite_2.png" },
+	{ name: "stalactite_3", url: "images/stalactite_3.png" },
+
+	{ name: "stalagmite_1", url: "images/stalagmite_1.png" },
+	{ name: "stalagmite_2", url: "images/stalagmite_2.png" },
+	{ name: "stalagmite_3", url: "images/stalagmite_3.png" },
+
+	{ name: "grass", url: "images/grass.png" },
+	{ name: "mushroom", url: "images/mushroom.png" },
+
+	{name: "titleScreenImg", url: "images/titleScreenImg.png" },
+
 ];
 var images = {};
 
@@ -87,12 +88,55 @@ function loadFonts(callback){
 
 
 const size = 80;
+const titlePixMap = [
+	"12222222211100022222",
+	"10022222221102210122",
+	"110210-------1211111",
+	"01001---------111101",
+	"10010---------100111",
+	"01110---------111110",
+	"11110---------111010",
+	"111001-------1011111",
+	"10011111012221011110",
+	"11101100101110222211"
+];
+
+const primaryDecor = [
+	"--------------------",
+	"--------------------",
+	"------)|((((|-------",
+	"-----|-------)------",
+	"--------------------",
+	"--------------------",
+	"-----,-------.------",
+	"------.,,..,,-------",
+	"--------------------",
+	"--------------------"
+];
+
+const secondaryDecor = [
+	"--------------------",
+	"--------------------",
+	"------)|((((|-------",
+	"-----|-------)------",
+	"--------------------",
+	"--------------------",
+	"-----M-------G------",
+	"------GGMMGGG-------",
+	"--------------------",
+	"--------------------"
+];
 
 function game(){
+	// Scene	
+	ctx.drawImage(images.titleScreenImg, WIDTH/2 - 420, HEIGHT/2 - 280, 889, 500);
+
+	// Pixel art cover
 	ctx.beginPath();
 
 	for(let i = 0; i < titlePixMap.length; i++){
 		for(let j = 0; j < titlePixMap[i].length; j++){
+
 			switch(titlePixMap[i][j]){
 			case '0':
 				ctx.drawImage(images.mossy, j*size, i*size, size, size);
@@ -115,16 +159,46 @@ function game(){
 				ctx.drawImage(images.lava_top, j*size, i*size, size, size);
 				break;
 			}
+
+			// Decor
+			switch(primaryDecor[i][j]){
+				case '(':
+					ctx.drawImage(images.stalactite_1, j*size, i*size, size, size);
+					break;
+
+				case '|':
+					ctx.drawImage(images.stalactite_2, j*size, i*size, size, size);
+					break;
+
+				case ')':
+					ctx.drawImage(images.stalactite_3, j*size, i*size, size, size);
+					break;
+
+				case ',':
+					ctx.drawImage(images.stalagmite_1, j*size, i*size, size, size);
+					break;
+				case '.':
+					ctx.drawImage(images.stalagmite_2, j*size, i*size, size, size);
+					break;
+				case '/':
+					ctx.drawImage(images.stalagmite_3, j*size, i*size, size, size);
+					break;
+			}
+
+			// Decor 2
+			switch(secondaryDecor[i][j]){
+				case 'G':
+					ctx.drawImage(images.grass, j*size, i*size, size, size);
+					break;
+				case 'M':
+					ctx.drawImage(images.mushroom, j*size, i*size, size, size);
+					break;
+			}
 		}
 	}
 
 	ctx.closePath();
 
-	// Scene
-	ctx.beginPath();
-		ctx.fillStyle = "black";
-		ctx.fillRect(WIDTH/2 - 412, HEIGHT/2 - 250, 800, 450);
-	ctx.closePath();
 
 	// Title
 	ctx.beginPath();
@@ -149,6 +223,18 @@ function game(){
 
 		ctx.fillStyle = "black";
 		ctx.fillText("Click to Play".split("").join(String.fromCharCode(8202)), WIDTH/2, HEIGHT/2.5);
+	ctx.closePath();
+
+
+	// Light effect (radial gradient)
+	// Took a stupidly long time to figure out.
+	const grad = ctx.createRadialGradient(WIDTH/2, HEIGHT/2, 100, WIDTH/2, HEIGHT/2, 700);
+	grad.addColorStop(0, "rgb(0, 0, 0, 0)");
+	grad.addColorStop(1, "rgb(0, 0, 0)");
+
+	ctx.beginPath();
+		ctx.fillStyle = grad;
+		ctx.fillRect(0, 0, WIDTH, HEIGHT);
 	ctx.closePath();
 }
 
