@@ -23,6 +23,29 @@
         <canvas id="canvas" width="0px" height="0px"></canvas>
     </body>
 
+    <!-- Init -->
+    <script>
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+
+        canvas.oncontextmenu = function(e){
+            e.preventDefault();
+        }
+
+        // Resize
+        canvas.width = window.screen.width;
+        canvas.height = window.screen.height;
+
+
+        let WIDTH = canvas.width;
+        let HEIGHT = canvas.height;
+    </script>
+
+    <script src="scenes.js"></script>
+    <script src="blocks.js"></script>
+    <script src="particles.js"></script>
+
     <script src="main.js"></script>
+
 
 </html>
