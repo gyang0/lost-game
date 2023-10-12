@@ -1,19 +1,3 @@
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
-
-canvas.oncontextmenu = function(e){
-	e.preventDefault();
-}
-
-// Resize (spent hours debugging after putting this in separate script tag -_-)
-canvas.width = window.screen.width;
-canvas.height = window.screen.height;
-
-
-let WIDTH = canvas.width;
-let HEIGHT = canvas.height;
-
-
 var imgURLs = [
 	{ name: "stone", url: "images/stone.png" },
 	{ name: "mossy", url: "images/mossy.png" },
@@ -22,19 +6,27 @@ var imgURLs = [
 	{ name: "lava2", url: "images/lava2.png" },
 	{ name: "lava_top", url: "images/lava_top.png" },
 
+	{ name: "stone_padding_right", url: "images/stone_padding_right.png" },
+	{ name: "stone_padding_left", url: "images/stone_padding_left.png" },
+
 	{ name: "stalactite_1", url: "images/stalactite_1.png" },
 	{ name: "stalactite_2", url: "images/stalactite_2.png" },
 	{ name: "stalactite_3", url: "images/stalactite_3.png" },
-
 	{ name: "stalagmite_1", url: "images/stalagmite_1.png" },
 	{ name: "stalagmite_2", url: "images/stalagmite_2.png" },
 	{ name: "stalagmite_3", url: "images/stalagmite_3.png" },
-
+	{ name: "volcano", url: "images/volcano.png" },
+	{ name: "volcano_haze_1", url: "images/volcano_haze_1.png" },
+	{ name: "volcano_haze_2", url: "images/volcano_haze_2.png" },
+	{ name: "volcano_haze_3", url: "images/volcano_haze_3.png" },
+	{ name: "volcano_haze_4", url: "images/volcano_haze_4.png" },
+	
 	{ name: "grass", url: "images/grass.png" },
 	{ name: "mushroom", url: "images/mushroom.png" },
+	{ name: "vine", url: "images/vine.png" },
 
-	{name: "titleScreenImg", url: "images/titleScreenImg.png" },
-
+	{name: "scene0", url: "images/scene0.png" },
+	{name: "titleScreenImg", url: "images/titleScreenImg.png" }
 ];
 var images = {};
 
@@ -76,9 +68,6 @@ function loadFonts(callback){
 			numLoaded++;
 
 			if(numLoaded == fonts.length){
-				// This is the game
-				console.log("Complete.");
-				console.log("%cHi! If you're seeing this, maybe you want to see the source code (or diagnose an error). Here's the link, feel free to contribute or open an issue as well: https://github.com/gyang0/lost-game", "color:green");
 				callback();
 			}
 		});
@@ -101,6 +90,21 @@ const titlePixMap = [
 	"11101100101110222211"
 ];
 
+// stone padding (to remove too-straight edges on sides)
+const stonePadding = [
+	"--------------------",
+	"--------------------",
+	"------>-----<-------",
+	"----->-------<------",
+	"----->-------<------",
+	"----->-------<------",
+	"----->-------<------",
+	"------>-----<-------",
+	"--------------------",
+	"--------------------"
+];
+
+// stalagmites, stalactites, & volcanos
 const primaryDecor = [
 	"--------------------",
 	"--------------------",
@@ -109,16 +113,17 @@ const primaryDecor = [
 	"--------------------",
 	"--------------------",
 	"-----/-------.------",
-	"------./,..,/-------",
+	"------./,..^/-------",
 	"--------------------",
 	"--------------------"
 ];
 
+// mushrooms, grass, vines, etc.
 const secondaryDecor = [
 	"--------------------",
 	"--------------------",
-	"------)|((((|-------",
-	"-----|-------)------",
+	"------V--V-VV-------",
+	"-----V--------------",
 	"--------------------",
 	"--------------------",
 	"-----M-------G------",
@@ -127,7 +132,7 @@ const secondaryDecor = [
 	"--------------------"
 ];
 
-function game(){
+function titleScreen(){
 	// Scene	
 	ctx.drawImage(images.titleScreenImg, WIDTH/2 - 420, HEIGHT/2 - 280, 889, 500);
 
@@ -171,6 +176,15 @@ function game(){
 				break;
 			}
 
+			switch(stonePadding[i][j]){
+			case '<':
+				ctx.drawImage(images.stone_padding_right, j*size, i*size, size, size);
+				break;
+			case '>':
+				ctx.drawImage(images.stone_padding_left, j*size, i*size, size, size);
+				break;
+			}
+
 			// Decor
 			switch(primaryDecor[i][j]){
 				case '(':
@@ -194,6 +208,10 @@ function game(){
 				case '/':
 					ctx.drawImage(images.stalagmite_3, j*size, i*size, size, size);
 					break;
+				case '^':
+					ctx.drawImage(images.volcano, j*size, i*size, size, size);
+					ctx.drawImage(images.volcano_haze_1, j*size, i*size, size, size);
+					break;
 			}
 
 			// Decor 2
@@ -203,6 +221,9 @@ function game(){
 					break;
 				case 'M':
 					ctx.drawImage(images.mushroom, j*size, i*size, size, size);
+					break;
+				case 'V':
+					ctx.drawImage(images.vine, j*size, i*size, size, size);
 					break;
 			}
 		}
@@ -221,13 +242,19 @@ function game(){
 		ctx.fillStyle = grad;
 		ctx.fillRect(0, 0, WIDTH, HEIGHT);
 	ctx.closePath();
+}
 
+
+let ps = new ParticleSystem();
+let frameCount = 0;
+function game(){
+	titleScreen();
 
 	// Title
 	ctx.beginPath();
 		ctx.font = "150px Young Serif";
 		ctx.lineWidth = 5;
-		ctx.strokeStyle = "rgb(255, 255, 0, 0.5)";
+		ctx.strokeStyle = `rgb(255, 255, 0, ${(frameCount % 301 == 0 || frameCount % 321 == 0) ? 0.2 : 0.5})`;
 		ctx.textAlign = "center";
 
 		ctx.strokeText("L O S T", WIDTH/2, HEIGHT/3.5);
@@ -240,22 +267,59 @@ function game(){
 	ctx.beginPath();
 		ctx.font = "40px Suez One";
 
-		ctx.strokeStyle = "rgb(255, 255, 0, 0.5)";
+		ctx.strokeStyle = `rgb(255, 255, 0, ${(frameCount % 453 == 0 || frameCount % 379 == 0) ? 0.2 : 0.5})`;
 		ctx.lineWidth = 1;
 		ctx.strokeText("Click to Play".split("").join(String.fromCharCode(8202)), WIDTH/2, HEIGHT/2.5);
 
 		ctx.fillStyle = "rgb(0, 0, 0, 0.2)";
 		ctx.fillText("Click to Play".split("").join(String.fromCharCode(8202)), WIDTH/2, HEIGHT/2.5);
 	ctx.closePath();
+
+
+	frameCount++;
+	frameCount %= 100000; // I'm scared of overflow
+
+	if(frameCount % 10 == 0){
+		ps.addParticles(Math.random() * WIDTH, HEIGHT);
+	}
+	ps.run();
+
+	window.requestAnimationFrame(game);
 }
+
 
 // Run
 new Promise(function(resolve, reject){
+	// Loading...
+	ctx.beginPath();
+		ctx.fillStyle = "black";
+		ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+		ctx.fillStyle = "white";
+		ctx.font = "60px serif"; // No fonts loaded yet
+		ctx.textAlign = "center";
+		ctx.fillText("Loading...", WIDTH/2, HEIGHT/2.5);
+	ctx.closePath();
+
+	// Load images
 	console.log("Loading images...");
 	loadImgs(resolve);
 
 }).then(() => {
-	// Load fonts and run game() when done
+	// Load fonts
 	console.log("Loading fonts...");
-	loadFonts(game);
+	return new Promise((resolve, reject) => loadFonts(resolve));
+
+})/*.then(() => {
+	// Intro
+	const s = new Scene();
+
+	return new Promise((resolve, reject) => s.intro(ctx, resolve));
+
+})*/.then(() => {
+	// Game
+	console.log("Complete.");
+	console.log("%cHi! If you're seeing this, maybe you want to see the source code (or diagnose an error). Here's the link, feel free to contribute or open an issue as well: https://github.com/gyang0/lost-game", "color:green");			
+	
+	window.requestAnimationFrame(game);
 });
