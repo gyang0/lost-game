@@ -1,40 +1,3 @@
-var imgURLs = [
-	{ name: "stone", url: "images/stone.png" },
-	{ name: "mossy", url: "images/mossy.png" },
-	{ name: "dirt", url: "images/dirt.png" },
-	{ name: "lava1", url: "images/lava1.png" },
-	{ name: "lava2", url: "images/lava2.png" },
-	{ name: "lava_top", url: "images/lava_top.png" },
-
-	{ name: "stone_padding_right", url: "images/stone_padding_right.png" },
-	{ name: "stone_padding_left", url: "images/stone_padding_left.png" },
-
-	{ name: "stalactite_1", url: "images/stalactite_1.png" },
-	{ name: "stalactite_2", url: "images/stalactite_2.png" },
-	{ name: "stalactite_3", url: "images/stalactite_3.png" },
-	{ name: "stalagmite_1", url: "images/stalagmite_1.png" },
-	{ name: "stalagmite_2", url: "images/stalagmite_2.png" },
-	{ name: "stalagmite_3", url: "images/stalagmite_3.png" },
-	{ name: "volcano", url: "images/volcano.png" },
-	{ name: "volcano_haze_1", url: "images/volcano_haze_1.png" },
-	{ name: "volcano_haze_2", url: "images/volcano_haze_2.png" },
-	{ name: "volcano_haze_3", url: "images/volcano_haze_3.png" },
-	{ name: "volcano_haze_4", url: "images/volcano_haze_4.png" },
-	
-	{ name: "grass", url: "images/grass.png" },
-	{ name: "mushroom", url: "images/mushroom.png" },
-	{ name: "vine", url: "images/vine.png" },
-
-	{name: "scene0", url: "images/scene0.png" },
-	{name: "titleScreenImg", url: "images/titleScreenImg.png" }
-];
-var images = {};
-
-const fonts = [
-	{ name: "Young Serif", url: "https://fonts.gstatic.com/s/youngserif/v2/3qTpojO2nS2VtkB3KtkQZ1t93kY.woff2" },
-	{ name: "Suez One", url: "https://fonts.gstatic.com/s/suezone/v13/taiJGmd_EZ6rqscQgOFOmos.woff2" }
-];
-
 function loadImgs(callback){
 	var numLoaded = 0;
 
@@ -242,13 +205,6 @@ function titleScreen(){
 		ctx.fillStyle = grad;
 		ctx.fillRect(0, 0, WIDTH, HEIGHT);
 	ctx.closePath();
-}
-
-
-let ps = new ParticleSystem();
-let frameCount = 0;
-function game(){
-	titleScreen();
 
 	// Title
 	ctx.beginPath();
@@ -274,17 +230,132 @@ function game(){
 		ctx.fillStyle = "rgb(0, 0, 0, 0.2)";
 		ctx.fillText("Click to Play".split("").join(String.fromCharCode(8202)), WIDTH/2, HEIGHT/2.5);
 	ctx.closePath();
+}
 
+let ps = new ParticleSystem();
+
+let frameCount = 0;
+
+let prevScene = "intro";
+let curScene = "intro"; // Current scene
+let startTrans = false; // Start transition
+let timer = 0; // Transition timer
+
+let click = false; // clicked?
+
+// Buttons
+let btns = {
+	"intro": [
+		new Button(WIDTH/2, HEIGHT/2, 100, 50, 'rgb(10)', 'rgb(100, 0, 0)', 'Skip', function(){
+			curScene = "menu";
+			startTrans = true;
+		})
+	],
+	"menu": [],
+	"game": []
+};
+
+
+let sss = new Slideshow(["stone", "mossy"], 100);
+
+
+// Scenes
+let scenes = {
+	intro: function(){
+		sss.run(frameCount, function(){
+			curScene = "menu";
+			startTrans = true;
+		});
+	},
+	menu: function(){
+		titleScreen();
+
+		// Light particles
+		if(frameCount % 10 == 0){
+			ps.addParticles(Math.random() * WIDTH, HEIGHT);
+		}
+		ps.run();
+
+		if(click){
+			curScene = "game";
+			startTrans = true;
+		}
+	},
+	game: function(){
+		ctx.beginPath();
+			ctx.fillStyle = "white";
+			ctx.fillText("Game goes here", WIDTH/2, HEIGHT*1/3);
+		ctx.closePath();
+	}
+};
+
+
+
+function draw(){
+	// Clear previous frame
+	ctx.clearRect(0, 0, WIDTH, HEIGHT);
+
+	// Backdrops
+	scenes[prevScene]();
+
+
+	// Button display
+	for(let i = 0; i < btns[prevScene].length; i++){
+		btns[prevScene][i].display();
+	}
+
+
+	// Transitions
+	if(startTrans){
+		timer++;
+		if(timer == 40){
+			prevScene = curScene;
+			frameCount = 0;
+		} else if(timer >= 80){
+			timer = 0;
+			startTrans = false;
+		}
+
+		// Nice fade-out effect
+		ctx.beginPath();
+			ctx.fillStyle = `rgb(0, 0, 0, ${(timer < 40 ? timer*6.375 : 500 - timer*6.375)/255})`;
+			ctx.fillRect(0, 0, WIDTH, HEIGHT);
+		ctx.closePath();
+	}
 
 	frameCount++;
-	frameCount %= 100000; // I'm scared of overflow
 
-	if(frameCount % 10 == 0){
-		ps.addParticles(Math.random() * WIDTH, HEIGHT);
+	// Reset
+	click = false;
+
+	window.requestAnimationFrame(draw);
+}
+
+// Mouse
+window.onclick = function(e){
+	// Buttons
+	for(let i = 0; i < btns[prevScene].length; i++){
+		if(btns[prevScene][i].mouseInRange(e.clientX, e.clientY)){
+			btns[prevScene][i].doFunc();
+		}
 	}
-	ps.run();
 
-	window.requestAnimationFrame(game);
+	click = true;
+};
+
+window.onmousemove = function(e){
+	// Cursor stuff
+	// Check if the mouse is over a button
+	let overButton = false;
+
+	for(let i = 0; i < btns[prevScene].length; i++){
+		if(btns[prevScene][i].mouseInRange(e.clientX, e.clientY)){
+			overButton = true;
+		}
+	}
+
+	if(overButton) document.body.style.cursor = "pointer";
+	else document.body.style.cursor = "default";
 }
 
 
@@ -310,16 +381,11 @@ new Promise(function(resolve, reject){
 	console.log("Loading fonts...");
 	return new Promise((resolve, reject) => loadFonts(resolve));
 
-})/*.then(() => {
-	// Intro
-	const s = new Scene();
-
-	return new Promise((resolve, reject) => s.intro(ctx, resolve));
-
-})*/.then(() => {
-	// Game
+}).then(() => {
+	// Main loop
 	console.log("Complete.");
 	console.log("%cHi! If you're seeing this, maybe you want to see the source code (or diagnose an error). Here's the link, feel free to contribute or open an issue as well: https://github.com/gyang0/lost-game", "color:green");			
 	
-	window.requestAnimationFrame(game);
+	// Draw function
+	window.requestAnimationFrame(draw);
 });
