@@ -20,7 +20,8 @@
     </style>
 
     <body>
-        <canvas id="canvas" width="0px" height="0px"></canvas>
+        <canvas id="canvas"></canvas>
+        <canvas></canvas>
     </body>
 
     <!-- Init -->
@@ -37,13 +38,53 @@
         canvas.height = window.screen.height;
 
 
+        // Some global variables
         let WIDTH = canvas.width;
         let HEIGHT = canvas.height;
+
+        var imgURLs = [
+            { name: "stone", url: "images/stone.png" },
+            { name: "mossy", url: "images/mossy.png" },
+            { name: "dirt", url: "images/dirt.png" },
+            { name: "lava1", url: "images/lava1.png" },
+            { name: "lava2", url: "images/lava2.png" },
+            { name: "lava_top", url: "images/lava_top.png" },
+
+            { name: "stone_padding_right", url: "images/stone_padding_right.png" },
+            { name: "stone_padding_left", url: "images/stone_padding_left.png" },
+
+            { name: "stalactite_1", url: "images/stalactite_1.png" },
+            { name: "stalactite_2", url: "images/stalactite_2.png" },
+            { name: "stalactite_3", url: "images/stalactite_3.png" },
+            { name: "stalagmite_1", url: "images/stalagmite_1.png" },
+            { name: "stalagmite_2", url: "images/stalagmite_2.png" },
+            { name: "stalagmite_3", url: "images/stalagmite_3.png" },
+            { name: "volcano", url: "images/volcano.png" },
+            { name: "volcano_haze_1", url: "images/volcano_haze_1.png" },
+            { name: "volcano_haze_2", url: "images/volcano_haze_2.png" },
+            { name: "volcano_haze_3", url: "images/volcano_haze_3.png" },
+            { name: "volcano_haze_4", url: "images/volcano_haze_4.png" },
+            
+            { name: "grass", url: "images/grass.png" },
+            { name: "mushroom", url: "images/mushroom.png" },
+            { name: "vine", url: "images/vine.png" },
+
+            {name: "scene0", url: "images/scene0.png" },
+            {name: "titleScreenImg", url: "images/titleScreenImg.png" }
+        ];
+        var images = {};
+
+        const fonts = [
+            { name: "Young Serif", url: "https://fonts.gstatic.com/s/youngserif/v2/3qTpojO2nS2VtkB3KtkQZ1t93kY.woff2" },
+            { name: "Suez One", url: "https://fonts.gstatic.com/s/suezone/v13/taiJGmd_EZ6rqscQgOFOmos.woff2" }
+        ];
+
     </script>
 
-    <script src="scenes.js"></script>
+    <script src="slideshow.js"></script>
     <script src="blocks.js"></script>
     <script src="particles.js"></script>
+    <script src="buttons.js"></script>
 
     <script src="main.js"></script>
 
