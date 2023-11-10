@@ -42,6 +42,10 @@
         let WIDTH = canvas.width;
         let HEIGHT = canvas.height;
 
+        // Interactions
+        let click = false; // clicked?
+        let keys = {}; // keys currently pressed
+        
         var imgURLs = [
             { name: "stone", url: "images/stone.png" },
             { name: "mossy", url: "images/mossy.png" },
@@ -68,9 +72,11 @@
             { name: "grass", url: "images/grass.png" },
             { name: "mushroom", url: "images/mushroom.png" },
             { name: "vine", url: "images/vine.png" },
-
-            {name: "scene0", url: "images/scene0.png" },
-            {name: "titleScreenImg", url: "images/titleScreenImg.png" }
+            
+            {name: "titleScreenImg", url: "images/titleScreenImg.png" },
+            {name: "introImg_1", url: "images/introImg_1.png" },
+            {name: "introImg_2", url: "images/introImg_2.png" },
+            {name: "introImg_3", url: "images/introImg_3.png" }
         ];
         var images = {};
 
@@ -85,6 +91,7 @@
     <script src="blocks.js"></script>
     <script src="particles.js"></script>
     <script src="buttons.js"></script>
+    <script src="game.js"></script>
 
     <script src="main.js"></script>
 
