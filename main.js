@@ -174,7 +174,6 @@ BLOCKS:
 	Allow users to place flags as a way to get their bearings?
 		- Or just do the map that expands as you go.
 
-	Assign rarities to each decor block
 	Add volcano haze
 	Add firefly hordes
 	Make things more natural, like on the menu screen. Skip decorations sometimes.
@@ -192,6 +191,8 @@ BLOCKS:
 	Some above-ground structures would be nice.
 
 	Same optimizations as before - only update & display blocks in scope.
+	Replace filler block with cave background block
+	It would be helpful if some shadows were given for non-solid blocks. So that openings can be seen more clearly.
 */
 
 
@@ -435,7 +436,7 @@ let timer = 0; // Transition timer
 // Buttons
 let btns = {
 	"intro": [
-		new Button(WIDTH * 9/10, HEIGHT * 1/10, 100, 50, 'rgb(10)', 'rgb(100, 0, 0)', 'Skip', function(){
+		new Button(WIDTH * 9/10, HEIGHT * 1/10, 100, 50, 'rgb(255, 255, 255)', 'rgb(100, 0, 0)', 'Skip', function(){
 			curScene = "menu";
 			startTrans = true;
 		})
@@ -446,9 +447,10 @@ let btns = {
 
 
 let sss = new Slideshow(
-	/*scenes*/ ["introImg_1", "introImg_3", "introImg_1", "introImg_3", "introImg_1", "introImg_2", "titleScreenImg"],
-	/*durations*/ [100, 2, 5, 2, 80, 2,  100],
+	/*scenes*/ ["introImg_1", "introImg_3", "introImg_1", "introImg_3", "introImg_1", "introImg_3", "introImg_1", "introImg_2", "titleScreenImg"],
+	/*durations*/ [100, 2, 70, 2, 5, 2, 80, 2, 100],
 	WIDTH/2 - 420, HEIGHT/2 - 280, 889, 500);
+
 let ps = new ParticleSystem();
 
 let game = new Game();
@@ -490,7 +492,7 @@ let scenes = {
 		titleScreen();
 
 		// Light particles
-		if(frameCount % 10 == 0){
+		if(frameCount % 10 == 0 && frameCount > 100){
 			ps.addParticles(Math.random() * WIDTH, HEIGHT);
 		}
 		ps.run();

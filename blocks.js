@@ -43,6 +43,9 @@ class DecorBlock extends Block {
 
 	display(xOff, yOff){
 		for(let i = 0; i < this.imgSrcList.length; i++){
+			if(this.imgSrcList[i] == null)
+				continue;
+			
 			ctx.drawImage(images[this.imgSrcList[i]], this.x - this.w/2 + xOff, this.y - this.h/2 + yOff, this.w, this.h);
 		}
 	}
