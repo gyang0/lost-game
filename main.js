@@ -193,6 +193,16 @@ BLOCKS:
 	Same optimizations as before - only update & display blocks in scope.
 	Replace filler block with cave background block
 	It would be helpful if some shadows were given for non-solid blocks. So that openings can be seen more clearly.
+
+	Rework hitboxes - make things more natural, so that the player doesn't die when nothing is touching it.
+
+	Add physical depth to the game (layers)
+	Add metaphorical depth (dynamic elements of the environment should interact with player, cave should have things
+							like mines and bones, not just a cave, etc.)
+	Active tutorial/game option at start
+
+
+	Does the player even have to be pixel art? More freedom if not.
 */
 
 
@@ -381,36 +391,28 @@ function titleScreen(){
 
 	// Title
 	ctx.beginPath();
-		ctx.globalAlpha = Math.max(0, (frameCount - 250)/50);
-
 		ctx.font = "150px Young Serif";
 		ctx.lineWidth = 5;
-		ctx.strokeStyle = `rgb(255, 255, 0, ${(frameCount % 301 == 0 || frameCount % 321 == 0) ? 0.2 : 0.5})`;
+		ctx.strokeStyle = `rgb(255, 255, 0, ${Math.min(0.5, Math.max(0, (frameCount - 250)/50))})`;
 		ctx.textAlign = "center";
 
 		ctx.strokeText("L O S T", WIDTH/2, HEIGHT/3.5);
 
-		ctx.fillStyle = "rgb(0, 0, 0, 0.2)";
+		ctx.fillStyle = `rgb(0, 0, 0, ${Math.min(0.2, Math.max(0, (frameCount - 250)/125))})`;
 		ctx.fillText("L O S T", WIDTH/2, HEIGHT/3.5);
-
-		ctx.globalAlpha = 1.0;
 	ctx.closePath();
 
 
 	// "Click to Play"
 	ctx.beginPath();
-		ctx.globalAlpha = Math.max(0, (frameCount - 350)/50);
 		ctx.font = "40px Suez One";
 	
-		ctx.strokeStyle = `rgb(255, 255, 0, ${(frameCount % 453 == 0 || frameCount % 379 == 0) ? 0.2 : 0.5})`;
+		ctx.strokeStyle = `rgb(255, 255, 0, ${Math.min(0.5, Math.max(0, (frameCount - 350)/50))})`;
 		ctx.lineWidth = 1;
 		ctx.strokeText("Click to Play".split("").join(String.fromCharCode(8202)), WIDTH/2, HEIGHT/2.5);
 
-		ctx.fillStyle = "rgb(0, 0, 0, 0.2)";
+		ctx.fillStyle = `rgb(0, 0, 0, ${Math.min(0.2, Math.max(0, (frameCount - 350)/125))})`;
 		ctx.fillText("Click to Play".split("").join(String.fromCharCode(8202)), WIDTH/2, HEIGHT/2.5);
-
-		// Reset
-		ctx.globalAlpha = 1.0;
 	ctx.closePath();
 	
 

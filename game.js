@@ -10,7 +10,7 @@ class Game {
 		this.stoneDecor = this.create2dArray(this.mapHeight, this.mapWidth);
 		this.decor = this.create2dArray(this.mapHeight, this.mapWidth);
 
-		this.player = new Player(WIDTH/2, HEIGHT/2, BLOCK_SIZE/2, BLOCK_SIZE/2, "mossy");
+		this.player = new Player(WIDTH/2, HEIGHT/2, BLOCK_SIZE * 3/4, BLOCK_SIZE * 3/4, "player");
 
 
 		// Testing
