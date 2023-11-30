@@ -3,9 +3,6 @@ Idea in place as early as the start of 2023
 Started coding early October 2023
 
 Player
-- Arrow keys/WASD to move
-- Holds flickering torch (not shown)
-- Glass bulb over head (to protect from environment)
 - Rockets as defense (affected by gravity)
 
 
@@ -203,6 +200,8 @@ BLOCKS:
 
 
 	Does the player even have to be pixel art? More freedom if not.
+
+	Redo fog in main screen (make it larger)
 */
 
 
@@ -430,8 +429,8 @@ function titleScreen(){
 
 let frameCount = 0;
 
-let prevScene = "game";
-let curScene = "game"; // Current scene
+let prevScene = "intro";
+let curScene = "intro"; // Current scene
 let startTrans = false; // Start transition
 let timer = 0; // Transition timer
 
@@ -449,8 +448,8 @@ let btns = {
 
 
 let sss = new Slideshow(
-	/*scenes*/ ["introImg_1", "introImg_3", "introImg_1", "introImg_3", "introImg_1", "introImg_3", "introImg_1", "introImg_2", "titleScreenImg"],
-	/*durations*/ [100, 2, 70, 2, 5, 2, 80, 2, 100],
+	/*scenes*/ ["introImg_4", "introImg_1", "introImg_3", "introImg_2", "titleScreenImg"],
+	/*durations*/ [200, 300, 2, 2, 150],
 	WIDTH/2 - 420, HEIGHT/2 - 280, 889, 500);
 
 let ps = new ParticleSystem();
