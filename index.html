@@ -21,7 +21,8 @@
 
     <body>
         <canvas id="canvas"></canvas>
-        <canvas></canvas>
+
+        <div id="buttons"></div>
     </body>
 
     <!-- Init -->
@@ -36,6 +37,9 @@
         // Resize
         canvas.width = window.screen.width;
         canvas.height = window.screen.height;
+
+        document.getElementById("buttons").style.width = window.screen.width;
+        document.getElementById("buttons").style.height = window.screen.height;
 
 
         // Some global variables
@@ -97,6 +101,7 @@
     <script src="particles.js"></script>
     <script src="buttons.js"></script>
     <script src="game.js"></script>
+    <script src="levelEditor.js"></script>
 
     <script src="main.js"></script>
 

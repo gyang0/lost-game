@@ -38,4 +38,31 @@ class Loader {
 
 		}
 	}
+
+	static addButtons(callback){
+		let loc = document.getElementById("buttons");
+		for(let scene in btns){
+			for(let i = 0; i < btns[scene].length; i++){
+				let el = document.createElement("button");
+				el.textContent = btns[scene][i].text;
+				el.style = `
+					position: absolute;
+
+					left: ${btns[scene][i].x}px;
+					top: ${btns[scene][i].y}px;
+					width: ${btns[scene][i].width};
+					height: ${btns[scene][i].height};
+					background-color: ${btns[scene][i].btnCol};
+					color: ${btns[scene][i].textCol};
+
+					display: block;
+				`;
+				el.addEventListener('click', () => {btns[scene][i].func});
+
+				loc.appendChild(el);
+			}
+		}
+
+		callback();
+	}
 }

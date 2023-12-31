@@ -1,5 +1,3 @@
-const BLOCK_SIZE = 80;
-
 class Game {
 	constructor(){
 		this.mapWidth = 40;
@@ -11,6 +9,11 @@ class Game {
 		this.decor = this.create2dArray(this.mapHeight, this.mapWidth);
 
 		this.player = new Player(WIDTH/2, HEIGHT/2, BLOCK_SIZE * 3/4, BLOCK_SIZE * 3/4, "player");
+
+		// Shadow gradient
+		this.grad = ctx.createRadialGradient(WIDTH/2, HEIGHT/2, 100, WIDTH/2, HEIGHT/2, 450);
+		this.grad.addColorStop(0, "rgb(0, 0, 0, 0)");
+		this.grad.addColorStop(1, "rgb(0, 0, 0)");
 
 
 		// Testing
@@ -148,12 +151,8 @@ class Game {
 		
 		this.player.update(this.blocks);
 
-		const grad = ctx.createRadialGradient(WIDTH/2, HEIGHT/2, 100, WIDTH/2, HEIGHT/2, 450);
-		grad.addColorStop(0, "rgb(0, 0, 0, 0)");
-		grad.addColorStop(1, "rgb(0, 0, 0)");
-
 		ctx.beginPath();
-			ctx.fillStyle = grad;
+			ctx.fillStyle = this.grad;
 			ctx.fillRect(0, 0, WIDTH, HEIGHT);
 		ctx.closePath();
 	}

@@ -202,6 +202,17 @@ BLOCKS:
 	Does the player even have to be pixel art? More freedom if not.
 
 	Redo fog in main screen (make it larger)
+
+	Font awesome icons: gear, github, tools
+	Use CSS buttons
+	Make an input div instead of manually taking input with window.(something) - (keys object still propagated)
+
+	For saving - warn of incognito browsers & clearing cache, give save code, skip automatically for returning users (?)
+	Use map data from level editor on menu screen too.
+	Make sure gradients aren't lagging or being inefficient.
+
+	Remove horrendous sharing of variables across files
+	Try to make things as compartmentalized as possible, or clearly group all shared variables into one place
 */
 
 
@@ -211,8 +222,8 @@ Oct. 31- Intro scene & option to skip
 Nov. 15 - Basic progression of levels & in-between scenes
 Nov. 30 - Ending scene
 Dec. 15 - Clean up code according to OOP principles
-Dec. 31 - Make levels procedurally generated
-Jan. 15 - Refine procedural generation, add lava (some shimering above?)
+Dec. 31 - Make levels & add local save
+Jan. 15 - Refine procedural generation, add lava (some shimmering above?)
 Jan. 31 - Add enemy #1: underground tentacles
 Feb. 15 - Add enemy #2: orangutan
 Feb. 28 - Add enemy #3: goat monster
@@ -225,8 +236,8 @@ Mar. 31 - Fix & release
 
 
 
+const BLOCK_SIZE = 80;
 
-const size = 80;
 const titlePixMap = [
 	"12222222211100022222",
 	"10022222221102210122",
@@ -307,75 +318,75 @@ function titleScreen(){
 
 			switch(titlePixMap[i][j]){
 			case '0':
-				ctx.drawImage(images.mossy, j*size, i*size, size, size);
+				ctx.drawImage(images.mossy, j*BLOCK_SIZE, i*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
 				break;
 			case '1':
-				ctx.drawImage(images.stone, j*size, i*size, size, size);
+				ctx.drawImage(images.stone, j*BLOCK_SIZE, i*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
 				break;
 			case '2':
-				ctx.drawImage(images.dirt, j*size, i*size, size, size);
+				ctx.drawImage(images.dirt, j*BLOCK_SIZE, i*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
 				break;
 			case '3':
 				// For lava, we randomly choose between 2 images for less noticeable patterns.
 				if(Math.random() >= 0.5)
-					ctx.drawImage(images.lava1, j*size, i*size, size, size);
+					ctx.drawImage(images.lava1, j*BLOCK_SIZE, i*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
 				else
-					ctx.drawImage(images.lava2, j*size, i*size, size, size);
+					ctx.drawImage(images.lava2, j*BLOCK_SIZE, i*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
 
 				break;
 			case '4':
-				ctx.drawImage(images.lava_top, j*size, i*size, size, size);
+				ctx.drawImage(images.lava_top, j*BLOCK_SIZE, i*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
 				break;
 			}
 
 			switch(stonePadding[i][j]){
 			case '<':
-				ctx.drawImage(images.stone_padding_right, j*size, i*size, size, size);
+				ctx.drawImage(images.stone_padding_right, j*BLOCK_SIZE, i*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
 				break;
 			case '>':
-				ctx.drawImage(images.stone_padding_left, j*size, i*size, size, size);
+				ctx.drawImage(images.stone_padding_left, j*BLOCK_SIZE, i*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
 				break;
 			}
 
 			// Decor
 			switch(primaryDecor[i][j]){
 				case '(':
-					ctx.drawImage(images.stalactite_1, j*size, i*size, size, size);
+					ctx.drawImage(images.stalactite_1, j*BLOCK_SIZE, i*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
 					break;
 
 				case '|':
-					ctx.drawImage(images.stalactite_2, j*size, i*size, size, size);
+					ctx.drawImage(images.stalactite_2, j*BLOCK_SIZE, i*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
 					break;
 
 				case ')':
-					ctx.drawImage(images.stalactite_3, j*size, i*size, size, size);
+					ctx.drawImage(images.stalactite_3, j*BLOCK_SIZE, i*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
 					break;
 
 				case ',':
-					ctx.drawImage(images.stalagmite_1, j*size, i*size, size, size);
+					ctx.drawImage(images.stalagmite_1, j*BLOCK_SIZE, i*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
 					break;
 				case '.':
-					ctx.drawImage(images.stalagmite_2, j*size, i*size, size, size);
+					ctx.drawImage(images.stalagmite_2, j*BLOCK_SIZE, i*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
 					break;
 				case '/':
-					ctx.drawImage(images.stalagmite_3, j*size, i*size, size, size);
+					ctx.drawImage(images.stalagmite_3, j*BLOCK_SIZE, i*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
 					break;
 				case '^':
-					ctx.drawImage(images.volcano, j*size, i*size, size, size);
-					ctx.drawImage(images.volcano_haze_1, j*size, i*size, size, size);
+					ctx.drawImage(images.volcano, j*BLOCK_SIZE, i*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+					ctx.drawImage(images.volcano_haze_1, j*BLOCK_SIZE, i*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
 					break;
 			}
 
 			// Decor 2
 			switch(secondaryDecor[i][j]){
 				case 'G':
-					ctx.drawImage(images.grass, j*size, i*size, size, size);
+					ctx.drawImage(images.grass, j*BLOCK_SIZE, i*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
 					break;
 				case 'M':
-					ctx.drawImage(images.mushroom, j*size, i*size, size, size);
+					ctx.drawImage(images.mushroom, j*BLOCK_SIZE, i*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
 					break;
 				case 'V':
-					ctx.drawImage(images.vine, j*size, i*size, size, size);
+					ctx.drawImage(images.vine, j*BLOCK_SIZE, i*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
 					break;
 			}
 		}
@@ -429,21 +440,80 @@ function titleScreen(){
 
 let frameCount = 0;
 
-let prevScene = "intro";
-let curScene = "intro"; // Current scene
+let prevScene = "menu";
+let curScene = "menu"; // Current scene
 let startTrans = false; // Start transition
 let timer = 0; // Transition timer
 
 // Buttons
 let btns = {
 	"intro": [
-		new Button(WIDTH * 9/10, HEIGHT * 1/10, 100, 50, 'rgb(255, 255, 255)', 'rgb(100, 0, 0)', 'Skip', function(){
-			curScene = "menu";
-			startTrans = true;
-		})
+		{
+			x: WIDTH * 0.9,
+			y: HEIGHT * 0.1,
+			width: 100,
+			height: 50,
+			btnCol: "gray",
+			textCol: "green",
+			text: 'Skip',
+			func: function(){ curScene = "menu"; startTrans = true; }
+		} // Skip
 	],
-	"menu": [],
-	"game": []
+	"menu": [
+		{
+			x: WIDTH * 0.7,
+			y: HEIGHT * 0.1,
+			width: 100,
+			height: 50,
+			btnCol: "gray",
+			textCol: "green",
+			text: '<i class="fa fa-gear"></i>',
+			func: function(){ curScene = "levelEditor"; startTrans = true; }
+		} // Level editor
+	],
+	"game": [],
+	"levelEditor": [
+		{
+			x: WIDTH * 0.7,
+			y: HEIGHT * 0.5,
+			width: 100,
+			height: 50,
+			btnCol: "gray",
+			textCol: "green",
+			text: 'Home',
+			func: function(){ curScene = "menu"; startTrans = true; }
+		}, // Go to menu
+		{
+			x: WIDTH * 0.6,
+			y: HEIGHT * 0.1,
+			width: 100,
+			height: 50,
+			btnCol: "gray",
+			textCol: "green",
+			text: 'Guidelines',
+			func: function(){ console.log("Todo"); }
+		}, // Guidelines (for creating levels)
+		{
+			x: WIDTH * 0.7,
+			y: HEIGHT * 0.1,
+			width: 100,
+			height: 50,
+			btnCol: "gray",
+			textCol: "green",
+			text: 'Spectator mode',
+			func: function(){ console.log("Todo"); }
+		}, // Enter/exit spectator mode
+		{
+			x: WIDTH * 0.8,
+			y: HEIGHT * 0.1,
+			width: 100,
+			height: 50,
+			btnCol: "gray",
+			textCol: "green",
+			text: 'Export map',
+			func: function(){ console.log("Todo"); }
+		} // Export (save level file)
+	]
 };
 
 
@@ -455,6 +525,7 @@ let sss = new Slideshow(
 let ps = new ParticleSystem();
 
 let game = new Game();
+let levelEditor = new LevelEditor();
 
 // Scenes
 let scenes = {
@@ -505,6 +576,9 @@ let scenes = {
 	},
 	game: function(){
 		game.run();
+	},
+	levelEditor: function(){
+		levelEditor.run();
 	}
 };
 
@@ -518,17 +592,23 @@ function draw(){
 	scenes[prevScene]();
 
 
-	// Button display
-	for(let i = 0; i < btns[prevScene].length; i++){
-		btns[prevScene][i].display();
-	}
-
-
 	// Transitions
 	if(startTrans){
 		timer++;
 		if(timer == 40){
+			let btnChild = document.getElementById("buttons").children;
+
+			for(let i = 0; i < btnChild.length; i++){
+				btnChild[i].style.display = "none";
+
+				// Display new scene's buttons
+				for(let obj in btns[curScene]){
+					btnChild[i].style.display = "block";
+				}
+			}
+
 			prevScene = curScene;
+
 		} else if(timer >= 80){
 			timer = 0;
 			startTrans = false;
@@ -552,30 +632,8 @@ function draw(){
 
 // Mouse
 window.onclick = function(e){
-	// Buttons
-	for(let i = 0; i < btns[prevScene].length; i++){
-		if(btns[prevScene][i].mouseInRange(e.clientX, e.clientY)){
-			btns[prevScene][i].doFunc();
-		}
-	}
-
 	click = true;
 };
-
-window.onmousemove = function(e){
-	// Cursor stuff
-	// Check if the mouse is over a button
-	let overButton = false;
-
-	for(let i = 0; i < btns[prevScene].length; i++){
-		if(btns[prevScene][i].mouseInRange(e.clientX, e.clientY)){
-			overButton = true;
-		}
-	}
-
-	if(overButton) document.body.style.cursor = "pointer";
-	else document.body.style.cursor = "default";
-}
 
 // Keyboard
 window.onkeydown = function(e){
@@ -609,6 +667,11 @@ new Promise(function(resolve, reject){
 	// Load fonts
 	console.log("Loading fonts...");
 	return new Promise((resolve, reject) => Loader.loadFonts(resolve));
+
+}).then(() => {
+	// Add buttons to HTML
+	console.log("Adding buttons...");
+	return new Promise((resolve, reject) => Loader.addButtons(resolve));
 
 }).then(() => {
 	// Main loop
